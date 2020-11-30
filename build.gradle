@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'org.openjfx.javafxplugin'
+
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://dl.bintray.com/speljohan/rxjavafx-mirror"
+    }
+}
+
+application {
+    mainClassName = 'BattleshipApp'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_14
+    targetCompatibility = JavaVersion.VERSION_14
+}
+
+javafx {
+    version = '14'
+    modules = ['javafx.base', 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media', 'javafx.swing', 'javafx.web']
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
