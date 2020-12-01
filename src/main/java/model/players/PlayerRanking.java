@@ -1,4 +1,4 @@
-package players;
+package model.players;
 
 import java.util.Collection;
 import java.util.LinkedList;

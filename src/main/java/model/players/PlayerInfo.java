@@ -1,6 +1,6 @@
-package players;
+package model.players;
 
-import game.Game;
+import model.game.Game;
 
 import java.util.Collection;
 import java.util.LinkedList;

@@ -1,6 +1,6 @@
-package game;
+package model.game;
 
-import statuses.CellStatus;
+import model.statuses.CellStatus;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package statuses;
+package model.statuses;
 
 public enum Result {
     WON,

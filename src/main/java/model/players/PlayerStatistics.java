@@ -1,4 +1,4 @@
-package players;
+package model.players;
 
 public class PlayerStatistics {
     private String nickName;

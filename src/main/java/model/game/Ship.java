@@ -1,7 +1,7 @@
-package game;
+package model.game;
 
-import statuses.CellStatus;
-import statuses.ShipStatus;
+import model.statuses.CellStatus;
+import model.statuses.ShipStatus;
 
 import java.util.Collection;
 

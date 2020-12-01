@@ -1,7 +1,7 @@
-package game;
+package model.game;
 
-import statuses.CellStatus;
-import statuses.Difficulty;
+import model.statuses.CellStatus;
+import model.statuses.Difficulty;
 
 public class Bot extends AbstractPlayer {
     private final Difficulty difficulty;

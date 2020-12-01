@@ -1,9 +1,9 @@
-package game;
+package model.game;
 
-import players.PlayerInfo;
-import statuses.CellStatus;
-import statuses.Difficulty;
-import statuses.Result;
+import model.players.PlayerInfo;
+import model.statuses.CellStatus;
+import model.statuses.Difficulty;
+import model.statuses.Result;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicBoolean;
