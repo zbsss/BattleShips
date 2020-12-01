@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>model.game</OriginalElement>
+  <nodes>
+    <node x="50.1666666666666" y="1295.0">model.game.Bot</node>
+    <node x="139.31607142857143" y="209.0">model.game.Cell</node>
+    <node x="288.7717261904762" y="484.0">model.game.Ship</node>
+    <node x="65.94512735326683" y="1450.0">model.game.Game</node>
+    <node x="61.64683693244746" y="0.0">model.game.Position</node>
+    <node x="204.36179401993348" y="2144.0">model.game.PlayerRanking</node>
+    <node x="272.15296234772984" y="1295.5">model.game.HumanPlayer</node>
+    <node x="310.1092400332226" y="36.5">model.game.CellObserver</node>
+    <node x="80.65296234772987" y="948.0">model.game.AbstractPlayer</node>
+    <node x="180.11179401993346" y="1869.0">model.game.PlayerInfo</node>
+    <node x="446.9451273532668" y="1582.5">model.game.PlayerStatistics</node>
+    <node x="47.896726190476215" y="759.0">model.game.Board</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="model.game.Game" target="model.game.HumanPlayer">
+      <point x="90.25" y="-184.5" />
+      <point x="336.6951273532668" y="1430.0" />
+      <point x="356.40296234772984" y="1430.0" />
+      <point x="-84.25" y="52.0" />
+    </edge>
+    <edge source="model.game.Game" target="model.game.AbstractPlayer">
+      <point x="30.083333333333314" y="-184.5" />
+      <point x="276.52846068660017" y="1430.0" />
+      <point x="261.65296234772984" y="1430.0" />
+      <point x="0.0" y="148.5" />
+    </edge>
+    <edge source="model.game.Cell" target="model.game.Position">
+      <point x="-110.25" y="-112.5" />
+      <point x="176.06607142857143" y="189.0" />
+      <point x="139.33433693244746" y="189.0" />
+      <point x="21.1875" y="64.5" />
+    </edge>
+    <edge source="model.game.Game" target="model.game.Bot">
+      <point x="-90.24999999999994" y="-184.5" />
+      <point x="156.19512735326688" y="1420.0" />
+      <point x="97.1666666666666" y="1420.0" />
+      <point x="-47.0" y="52.5" />
+    </edge>
+    <edge source="model.game.PlayerRanking" target="model.game.PlayerStatistics">
+      <point x="110.33333333333333" y="-52.5" />
+      <point x="480.1951273532668" y="2119.0" />
+      <point x="578.9451273532668" y="2119.0" />
+      <point x="44.0" y="52.0" />
+    </edge>
+    <edge source="model.game.Board" target="model.game.Cell">
+      <point x="76.75" y="-64.5" />
+      <point x="278.1467261904762" y="734.0" />
+      <point x="255.28689091915842" y="734.0" />
+      <point x="255.28689091915842" y="459.0" />
+      <point x="286.3160714285715" y="459.0" />
+      <point x="5.6843418860808015E-14" y="112.5" />
+    </edge>
+    <edge source="model.game.PlayerRanking" target="model.game.PlayerInfo">
+      <point x="-110.33333333333331" y="-52.5" />
+      <point x="259.52846068660017" y="2119.0" />
+      <point x="243.36179401993346" y="2119.0" />
+      <point x="-63.25" y="112.5" />
+    </edge>
+    <edge source="model.game.Game" target="model.game.Position">
+      <point x="-150.41666666666657" y="-184.5" />
+      <point x="96.02846068660025" y="1430.0" />
+      <point x="0.0" y="1430.0" />
+      <point x="0.0" y="149.0" />
+      <point x="68.70933693244746" y="149.0" />
+      <point x="-49.4375" y="64.5" />
+    </edge>
+    <edge source="model.game.Board" target="model.game.Ship">
+      <point x="127.91666666666663" y="-64.5" />
+      <point x="329.31339285714284" y="734.0" />
+      <point x="314.2717261904762" y="734.0" />
+      <point x="-102.0" y="112.5" />
+    </edge>
+    <edge source="model.game.HumanPlayer" target="model.game.Ship">
+      <point x="42.125" y="-52.0" />
+      <point x="482.77796234772984" y="1270.0" />
+      <point x="501.65762735326683" y="1270.0" />
+      <point x="501.65762735326683" y="734.0" />
+      <point x="518.2717261904762" y="734.0" />
+      <point x="102.0" y="112.5" />
+    </edge>
+    <edge source="model.game.AbstractPlayer" target="model.game.Ship">
+      <point x="155.1428571428571" y="-148.5" />
+      <point x="416.79581949058695" y="928.0" />
+      <point x="430.1468369324475" y="928.0" />
+      <point x="430.1468369324475" y="734.0" />
+      <point x="467.2717261904762" y="734.0" />
+      <point x="51.0" y="112.5" />
+    </edge>
+    <edge source="model.game.Game" target="model.game.PlayerInfo">
+      <point x="0.0" y="184.5" />
+      <point x="246.44512735326683" y="1844.0" />
+      <point x="274.9867940199334" y="1844.0" />
+      <point x="-31.625" y="-112.5" />
+    </edge>
+    <edge source="model.game.HumanPlayer" target="model.game.AbstractPlayer">
+      <point x="-42.125" y="-52.0" />
+      <point x="398.52796234772984" y="1270.0" />
+      <point x="406.4529623477299" y="1270.0" />
+      <point x="144.8" y="148.5" />
+    </edge>
+    <edge source="model.game.Bot" target="model.game.AbstractPlayer">
+      <point x="62.66666666666666" y="-52.5" />
+      <point x="206.83333333333326" y="1270.0" />
+      <point x="189.25296234772986" y="1270.0" />
+      <point x="-72.4" y="148.5" />
+    </edge>
+    <edge source="model.game.Bot" target="model.game.Position">
+      <point x="-62.66666666666666" y="-52.5" />
+      <point x="81.49999999999994" y="1270.0" />
+      <point x="26.396726190476215" y="1270.0" />
+      <point x="26.396726190476215" y="159.0" />
+      <point x="82.83433693244746" y="159.0" />
+      <point x="-35.3125" y="64.5" />
+    </edge>
+    <edge source="model.game.AbstractPlayer" target="model.game.Board">
+      <point x="-103.42857142857133" y="-148.5" />
+      <point x="158.22439091915854" y="918.0" />
+      <point x="99.0633928571429" y="918.0" />
+      <point x="-102.33333333333333" y="64.5" />
+    </edge>
+    <edge source="model.game.Cell" target="model.game.CellObserver">
+      <point x="36.75" y="-112.5" />
+      <point x="323.06607142857143" y="189.0" />
+      <point x="345.1092400332226" y="189.0" />
+      <point x="-70.0" y="28.0" />
+    </edge>
+    <edge source="model.game.Ship" target="model.game.CellObserver">
+      <point x="85.0" y="-112.5" />
+      <point x="501.2717261904762" y="459.0" />
+      <point x="499.2868909191584" y="459.0" />
+      <point x="499.2868909191584" y="189.0" />
+      <point x="485.1092400332226" y="189.0" />
+      <point x="70.0" y="28.0" />
+    </edge>
+    <edge source="model.game.PlayerInfo" target="model.game.PlayerStatistics">
+      <point x="94.875" y="-112.5" />
+      <point x="401.4867940199334" y="1844.0" />
+      <point x="490.9451273532668" y="1844.0" />
+      <point x="-44.0" y="52.0" />
+    </edge>
+    <edge source="model.game.PlayerInfo" target="model.game.Game">
+      <point x="-94.875" y="-112.5" />
+      <point x="211.73679401993346" y="1844.0" />
+      <point x="126.11179401993348" y="1844.0" />
+      <point x="-120.33333333333333" y="184.5" />
+    </edge>
+    <edge source="model.game.Ship" target="model.game.Cell">
+      <point x="-85.0" y="-112.5" />
+      <point x="331.2717261904762" y="459.0" />
+      <point x="345.11607142857144" y="459.0" />
+      <point x="58.80000000000001" y="112.5" />
+    </edge>
+    <edge source="model.game.AbstractPlayer" target="model.game.Position">
+      <point x="-155.14285714285705" y="-148.5" />
+      <point x="106.51010520487281" y="928.0" />
+      <point x="37.396726190476215" y="928.0" />
+      <point x="37.396726190476215" y="169.0" />
+      <point x="96.95933693244746" y="169.0" />
+      <point x="-21.1875" y="64.5" />
+    </edge>
+    <edge source="model.game.HumanPlayer" target="model.game.Position">
+      <point x="126.37499999999997" y="-52.0" />
+      <point x="567.0279623477298" y="1270.0" />
+      <point x="565.8877976190477" y="1270.0" />
+      <point x="565.8877976190477" y="169.0" />
+      <point x="167.58433693244746" y="169.0" />
+      <point x="49.4375" y="64.5" />
+    </edge>
+    <edge source="model.game.Board" target="model.game.Position">
+      <point x="-76.74999999999997" y="-64.5" />
+      <point x="124.64672619047624" y="734.0" />
+      <point x="107.98689091915838" y="734.0" />
+      <point x="107.98689091915838" y="189.0" />
+      <point x="125.20933693244746" y="189.0" />
+      <point x="7.0625" y="64.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.9" x="266.4999999999999" y="313.3333333333333" />
+  <SelectedNodes>
+    <node>model.game.Position</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
