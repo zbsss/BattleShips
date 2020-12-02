@@ -9,7 +9,20 @@ Projekt jest realizowany w ramach laboratorium z technologii obiektowych na seme
 - *Oliwia Masiarek*
 - *Tomasz Rosiek*
 
-\newpage
+# Odpowiedzialności w projekcie:
+- *Michał Kurleto*:
+  - tworzenie modelu
+  - implementacja modelu
+
+- *Oliwia Masiarek*:
+  - tworzenie modelu
+  - opracowanie mechaniki dodawania statków
+  - dokumentacja
+
+- *Tomasz Rosiek*:
+  - tworzenie modelu
+  - opracowanie mechaniki dodawania statków oraz implementacja
+
 
 # Cel projektu
 Celem projektu jest stworzenie gry *Statki*.
