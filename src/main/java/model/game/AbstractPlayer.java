@@ -13,12 +13,16 @@ public abstract class AbstractPlayer {
         myBoard = new Board(boardSize);
         enemyBoard = new Board(boardSize);
 
-        // Todo add all ships
         ships = new ArrayList<>();
+        ships.add(new Ship(1));
+        ships.add(new Ship(1));
+        ships.add(new Ship(1));
+        ships.add(new Ship(2));
+        ships.add(new Ship(2));
         ships.add(new Ship(2));
         ships.add(new Ship(3));
+        ships.add(new Ship(3));
         ships.add(new Ship(4));
-        ships.add(new Ship(6));
     }
 
     public boolean hasNotLost(){
@@ -72,13 +76,18 @@ public abstract class AbstractPlayer {
     /**
      * given some starting position and orientation
      * returns a starting position for the ship
+     * (highest point if it's vertical or left-most if not vertical (horizontal))
      * or null if some position along the way was taken
      */
     private Position getShipBeginning(Ship ship, int i, int j, boolean vertical){
         int boardSize = myBoard.getBoardSize();
         int shipLength = ship.getLength();
 
-        // Set i, j at the beginning of the ship
+        /*
+        Set i, j at the beginning of the ship
+        vertical means that (i, j) is the highest point of the ship
+        horizontal means that (i,j) is the left-most point of the ship
+        */
         if(vertical){
             if(i + shipLength > boardSize){
                 i -= shipLength;
@@ -88,29 +97,33 @@ public abstract class AbstractPlayer {
             j -= shipLength;
         }
 
-
-        // Check if all positions are free
-        boolean isFree = true;
-
-        if(vertical){
-            for(int ni = i; ni < i + shipLength; ni++){
-                if(!myBoard.cellFree(new Position(ni, j))){
-                    isFree = false;
-                    break;
-                }
-            }
+        // Check if all positions and all positions around them are free
+        // If some positions were taken return null
+        boolean isFree;
+        if(vertical) {
+             isFree = spaceNotFree(i, j, boardSize, ship.getLength(), 1);
         }
         else{
-            for(int nj = j; nj < j + shipLength; nj++){
-                if(!myBoard.cellFree(new Position(i, nj))){
-                    isFree = false;
-                    break;
-                }
-            }
+            isFree = spaceNotFree(i, j, boardSize, 1, ship.getLength());
         }
 
-        // If some positions were taken return null
         return isFree ? new Position(i, j) : null;
+    }
+
+    /**
+     * Checks if all cells around the ship are free, so that the ship can be freely placed
+     * @param Di delta i, length of the ship if ship is vertical or 1 if it's horizontal
+     * @param Dj delta j, length of the ship if ship is horizontal or 1 if it's vertical
+     * @return true if all positions are free, false if at least one is taken
+     */
+    private boolean spaceNotFree(int i, int j, int boardSize, int Di, int Dj) {
+        for (int ni = Math.max(i - 1, 0); ni <= Math.min(i + Di, boardSize - 1); ni++) {
+            for (int nj = Math.max(j - 1, 0); nj <= Math.min(j + Dj, boardSize - 1); nj++) {
+                if (!myBoard.cellFree(new Position(ni, nj)))
+                    return true;
+            }
+        }
+        return false;
     }
 
 
@@ -150,5 +163,9 @@ public abstract class AbstractPlayer {
 
     public Board getEnemyBoard() {
         return enemyBoard;
+    }
+
+    public int getBoardSize(){
+        return myBoard.getBoardSize();
     }
 }

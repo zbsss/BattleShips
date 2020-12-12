@@ -1,5 +1,6 @@
 package model.game;
 
+import javafx.geometry.Pos;
 import model.statuses.CellStatus;
 
 import java.util.Collection;
@@ -53,5 +54,10 @@ public class Board {
 
     public boolean cellFree(Position position){
         return getCell(position).getStatus() == CellStatus.WATER;
+    }
+
+    public boolean cellCanBeHit(Position position){
+        CellStatus status = getCell(position).getStatus();
+        return status == CellStatus.WATER || status == CellStatus.SHIP;
     }
 }
