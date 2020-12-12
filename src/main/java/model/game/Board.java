@@ -3,6 +3,7 @@ package model.game;
 import model.statuses.CellStatus;
 
 import java.util.Collection;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -43,5 +44,14 @@ public class Board {
      */
     public Cell getCell(Position position){
         return board[position.getX()][position.getY()];
+    }
+
+
+    public int getBoardSize(){
+        return board.length;
+    }
+
+    public boolean cellFree(Position position){
+        return getCell(position).getStatus() == CellStatus.WATER;
     }
 }

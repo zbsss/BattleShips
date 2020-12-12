@@ -1,5 +1,6 @@
 package model.game;
 
+import model.game.bot.BotFactory;
 import model.players.PlayerInfo;
 import model.statuses.CellStatus;
 import model.statuses.Difficulty;
@@ -11,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Game {
     private final PlayerInfo playerInfo;
     private final HumanPlayer player;
-    private final Bot bot;
+    private final AbstractPlayer bot;
 
     private LocalDateTime beginning;
     private LocalDateTime end;
@@ -21,7 +22,7 @@ public class Game {
     public Game(PlayerInfo playerInfo, int boardSize, Difficulty difficulty){
         this.playerInfo = playerInfo;
         player = new HumanPlayer(boardSize);
-        bot = new Bot(boardSize, difficulty);
+        bot = BotFactory.createBot(difficulty, boardSize);
     }
 
     /**

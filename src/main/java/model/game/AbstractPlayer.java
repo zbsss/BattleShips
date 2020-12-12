@@ -2,8 +2,7 @@ package model.game;
 
 import model.statuses.CellStatus;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 public abstract class AbstractPlayer {
     private final Board myBoard;
@@ -31,9 +30,89 @@ public abstract class AbstractPlayer {
     }
 
     /**
-     * places ships on the board
+     * places all ships in random positions
      */
-    public abstract void place();
+    public void place() {
+        Random rnd = new Random();
+        int boardSize = getMyBoard().getBoardSize();
+
+        Position shipBeginning;
+        boolean vertical;
+
+        for(Ship ship : getShips()){
+            do{
+                vertical = rnd.nextBoolean();
+                int i = rnd.nextInt(boardSize);
+                int j = rnd.nextInt(boardSize);
+                shipBeginning = getShipBeginning(ship, i, j, vertical);
+            } while (shipBeginning == null);
+
+            // Construct a list of all Positions of the ship
+            List<Position> positions = new LinkedList<>();
+            int i = shipBeginning.getX();
+            int j = shipBeginning.getY();
+
+            if(vertical){
+                for(int ni = i; ni < i + ship.getLength(); ni++){
+                    positions.add(new Position(ni, j));
+                }
+            }
+            else{
+                for(int nj = j; nj < j + ship.getLength(); nj++){
+                    positions.add(new Position(i, nj));
+                }
+            }
+
+            // Place the ship on given positions
+            getMyBoard().place(positions, ship);
+        }
+    }
+
+
+    /**
+     * given some starting position and orientation
+     * returns a starting position for the ship
+     * or null if some position along the way was taken
+     */
+    private Position getShipBeginning(Ship ship, int i, int j, boolean vertical){
+        int boardSize = myBoard.getBoardSize();
+        int shipLength = ship.getLength();
+
+        // Set i, j at the beginning of the ship
+        if(vertical){
+            if(i + shipLength > boardSize){
+                i -= shipLength;
+            }
+        }
+        else if(j + shipLength > boardSize){
+            j -= shipLength;
+        }
+
+
+        // Check if all positions are free
+        boolean isFree = true;
+
+        if(vertical){
+            for(int ni = i; ni < i + shipLength; ni++){
+                if(!myBoard.cellFree(new Position(ni, j))){
+                    isFree = false;
+                    break;
+                }
+            }
+        }
+        else{
+            for(int nj = j; nj < j + shipLength; nj++){
+                if(!myBoard.cellFree(new Position(i, nj))){
+                    isFree = false;
+                    break;
+                }
+            }
+        }
+
+        // If some positions were taken return null
+        return isFree ? new Position(i, j) : null;
+    }
+
 
     /**
      * plays a turn
