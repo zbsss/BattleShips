@@ -70,6 +70,7 @@ public abstract class AbstractPlayer {
             // Place the ship on given positions
             getMyBoard().place(positions, ship);
         }
+
     }
 
 
@@ -101,10 +102,10 @@ public abstract class AbstractPlayer {
         // If some positions were taken return null
         boolean isFree;
         if(vertical) {
-             isFree = spaceNotFree(i, j, boardSize, ship.getLength(), 1);
+             isFree = isFreeAround(i, j, boardSize, ship.getLength(), 1);
         }
         else{
-            isFree = spaceNotFree(i, j, boardSize, 1, ship.getLength());
+            isFree = isFreeAround(i, j, boardSize, 1, ship.getLength());
         }
 
         return isFree ? new Position(i, j) : null;
@@ -116,14 +117,14 @@ public abstract class AbstractPlayer {
      * @param Dj delta j, length of the ship if ship is horizontal or 1 if it's vertical
      * @return true if all positions are free, false if at least one is taken
      */
-    private boolean spaceNotFree(int i, int j, int boardSize, int Di, int Dj) {
+    private boolean isFreeAround(int i, int j, int boardSize, int Di, int Dj) {
         for (int ni = Math.max(i - 1, 0); ni <= Math.min(i + Di, boardSize - 1); ni++) {
             for (int nj = Math.max(j - 1, 0); nj <= Math.min(j + Dj, boardSize - 1); nj++) {
                 if (!myBoard.cellFree(new Position(ni, nj)))
-                    return true;
+                    return false;
             }
         }
-        return false;
+        return true;
     }
 
 
