@@ -6,10 +6,11 @@ import model.statuses.Difficulty;
 public class BotFactory {
 
     public static AbstractPlayer createBot(Difficulty difficulty, int boardSize){
-        return switch (difficulty) {
-            case EASY -> new EasyBot(boardSize);
-            case MEDIUM -> new MediumBot(boardSize);
-            case HARD -> new HardBot(boardSize);
+        switch (difficulty) {
+            case EASY: return new EasyBot(boardSize);
+            case MEDIUM: return new MediumBot(boardSize);
+            case HARD: return new HardBot(boardSize);
         };
+        return null;
     }
 }
