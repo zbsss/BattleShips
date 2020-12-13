@@ -3,6 +3,7 @@ package model.dao;
 import model.players.PlayerInfo;
 
 import javax.persistence.PersistenceException;
+import java.util.List;
 import java.util.Optional;
 
 public class PlayerInfoDAO extends GenericDAO<PlayerInfo> {
@@ -36,5 +37,16 @@ public class PlayerInfoDAO extends GenericDAO<PlayerInfo> {
             e.printStackTrace();
         }
         return Optional.empty();
+    }
+
+    public List<PlayerInfo> findAllPlayers() {
+        try {
+            List<PlayerInfo> playerInfos = currentSession().createQuery("SELECT p FROM PlayerInfo p", PlayerInfo.class)
+                    .getResultList();
+            return playerInfos;
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
+        return List.of();
     }
 }

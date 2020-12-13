@@ -7,6 +7,7 @@ import model.statuses.Result;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class GameResultDAO extends GenericDAO<GameResult>{
@@ -36,13 +37,15 @@ public class GameResultDAO extends GenericDAO<GameResult>{
 
     public Optional<GameResult> findGameResult(final LocalDateTime beginTime, final int playerId) {
         try {
-            GameResult gameResult = (GameResult) currentSession().createQuery("SELECT g FROM GameResult g WHERE g.beginTime = :begin_time AND g.playerId = :player_id", GameResult.class)
+            GameResult gameResult = currentSession().createQuery("SELECT g FROM GameResult g WHERE g.beginTime = :begin_time AND g.playerId = :player_id", GameResult.class)
                     .setParameter("begin_time", beginTime)
-                    .setParameter("player_id", playerId);
+                    .setParameter("player_id", playerId).getSingleResult();
             return Optional.of(gameResult);
         } catch (PersistenceException e) {
             e.printStackTrace();
         }
         return Optional.empty();
     }
+
+
 }

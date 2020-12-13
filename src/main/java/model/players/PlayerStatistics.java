@@ -1,14 +1,25 @@
 package model.players;
 
 public class PlayerStatistics {
-    private String nickName;
-    private int wins;
-    private int loses;
-    // Todo, what else?
+    private PlayerInfo player;
+    private long wins;
+    private long loses;
 
-    public PlayerStatistics(String nickName, int wins, int loses) {
-        this.nickName = nickName;
+    public PlayerStatistics(PlayerInfo player, long wins, long loses) {
+        this.player = player;
         this.wins = wins;
         this.loses = loses;
+    }
+
+    public PlayerInfo getPlayer() {
+        return player;
+    }
+
+    public long getWins() {
+        return wins;
+    }
+
+    public long getLoses() {
+        return loses;
     }
 }

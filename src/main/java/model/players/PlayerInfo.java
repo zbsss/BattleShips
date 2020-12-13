@@ -124,8 +124,7 @@ public class PlayerInfo {
      * @return players overall statistics from all games
      */
     public PlayerStatistics getStatistics(){
-        // Todo
-        return null;
+    return null;
     }
 
     class Columns {
