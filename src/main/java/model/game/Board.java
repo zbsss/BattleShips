@@ -47,6 +47,9 @@ public class Board {
         return board[position.getX()][position.getY()];
     }
 
+    public CellStatus getCellStatus(Position position){
+        return getCell(position).getStatus();
+    }
 
     public int getBoardSize(){
         return board.length;
@@ -57,7 +60,11 @@ public class Board {
     }
 
     public boolean cellCanBeHit(Position position){
-        CellStatus status = getCell(position).getStatus();
+        CellStatus status = getCellStatus(position);
         return status == CellStatus.WATER || status == CellStatus.SHIP;
+    }
+
+    public boolean isValidPosition(Position position){
+        return position.getX() >=0 && position.getX() < board.length && position.getY() >=0 && position.getY() < board.length;
     }
 }
