@@ -18,11 +18,13 @@ public class Game {
     private LocalDateTime end;
     private Result result;
     private AtomicBoolean running;
+    private Difficulty difficulty;
 
     public Game(PlayerInfo playerInfo, int boardSize, Difficulty difficulty){
         this.playerInfo = playerInfo;
         player = new HumanPlayer(boardSize);
         bot = BotFactory.createBot(difficulty, boardSize);
+        this.difficulty = difficulty;
     }
 
     /**
