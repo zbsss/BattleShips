@@ -2,6 +2,7 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.dao.PlayerInfoDAO;
@@ -11,6 +12,7 @@ import java.text.ParseException;
 import java.util.Optional;
 
 public class LoginDialogController {
+    BattleshipGameController battleshipGameController;
 
     @FXML
     private TextField nickField;
@@ -25,6 +27,9 @@ public class LoginDialogController {
         this.dialogStage = dialogStage;
     }
 
+    public void setBattleshipGameController(BattleshipGameController battleshipGameController) {
+        this.battleshipGameController = battleshipGameController;
+    }
 
     @FXML
     private void handleLogInAction(ActionEvent event) throws ParseException {
@@ -35,7 +40,10 @@ public class LoginDialogController {
         }
         dialogStage.setTitle("Password is incorrect");
         passwordField.setText("");
+
     }
 
 
+    public void initRootLayout() {
+    }
 }

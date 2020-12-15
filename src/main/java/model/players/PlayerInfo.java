@@ -12,7 +12,7 @@ public class PlayerInfo {
 
     static final String TABLENAME = "player";
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Columns.ID)
     private int id;
 

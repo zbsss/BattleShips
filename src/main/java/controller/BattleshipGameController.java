@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -9,10 +10,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import model.game.Game;
+import model.game.*;
+import model.players.PlayerInfo;
+import model.statuses.CellStatus;
+import model.statuses.Difficulty;
+import view.BattleshipCellObserver;
+import view.SecretBattleshipCellObserver;
+import view.CellPainter;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -20,12 +27,7 @@ import java.util.stream.Collectors;
 
 public class BattleshipGameController {
 
-    private final static Paint BOARD_PAINT = Paint.valueOf("aquamarine");
-    private final static Paint SHIP_PAINT = Paint.valueOf("orange");
-    private final static Paint ATTACK_PAINT = Paint.valueOf("black");
-
-    private final static int BOARD_WIDTH = 10;
-    private final static int BOARD_HEIGHT = 10;
+    private final static int BOARD_SIZE = 10;
 
     @FXML
     BorderPane borderPane;
@@ -72,6 +74,11 @@ public class BattleshipGameController {
     int length;
     Rectangle dragSource;
 
+    /**
+     * MOCK DATA - TO CHANGE DEPENDING ON GREETING PANEL
+     */
+    Game game = new Game(new PlayerInfo("Andrzej", "Duda", "andrzej@mail.pl", "cienMgly", "Burkina Faso", "admin1"), BOARD_SIZE, Difficulty.HARD);
+    HumanPlayer player = game.getPlayer();
 
     /**
      * Attributes necessary for control of drag-operation conducted to place ships on the player board
@@ -79,15 +86,52 @@ public class BattleshipGameController {
     private final List<Rectangle> currShip = new LinkedList<>();
     private final Map<Integer, List<HBox>> possibleShips = new HashMap<>();
 
+    private BattleshipCellObserver playerObserver;
+    private BattleshipCellObserver botObserver;
 
-
+    
 
     @FXML
     public void initialize() {
+        playerObserver = new BattleshipCellObserver(playerBoard);
+        botObserver = new SecretBattleshipCellObserver(enemyBoard);
+
         initializePossibleShips();
         initializeBoards();
+
         initializeBoardPaneListeners();
         initializeCellsListeners();
+
+        initializeEnemyCellsListeners();
+
+        addCellsObservers();
+
+        initializeCloseListener();
+
+
+        Thread gameThread = new Thread(game);
+        gameThread.start();
+    }
+
+    private void initializeCloseListener() {
+        playerBoard.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
+            if (oldScene == null && newScene != null) {
+                newScene.windowProperty().addListener((observableWindow, oldWindow, newWindow) -> {
+                    if (oldWindow == null && newWindow != null) {
+                        newWindow.setOnCloseRequest(e -> {
+                            game.cancel();
+                            player.cancel();
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+
+    private void addCellsObservers() {
+        Arrays.stream(player.getMyBoard().getCells()).forEach(a -> Arrays.stream(a).forEach(c -> c.addObserver(playerObserver)));
+        Arrays.stream(game.getBot().getMyBoard().getCells()).forEach(a -> Arrays.stream(a).forEach(c -> c.addObserver(botObserver)));
     }
 
     /**
@@ -95,8 +139,8 @@ public class BattleshipGameController {
      * and #{@link #handleBorderPaneDragDropped(DragEvent)}
      */
     private void initializeBoardPaneListeners() {
-        borderPane.setOnDragOver(e -> handleBorderPaneDragOver(e));
-        borderPane.setOnDragDropped(e -> handleBorderPaneDragDropped(e));
+        borderPane.setOnDragOver(this::handleBorderPaneDragOver);
+        borderPane.setOnDragDropped(this::handleBorderPaneDragDropped);
     }
 
     /**
@@ -121,10 +165,19 @@ public class BattleshipGameController {
         playerBoard.getChildren().forEach(c -> {
             if (c instanceof Rectangle) {
                 c.setOnMouseClicked(e -> handleFieldMouseClicked((Rectangle) c, e));
-                c.setOnDragDropped(e -> handleFieldDragDropped(e));
+                c.setOnDragDropped(this::handleFieldDragDropped);
                 c.setOnDragDetected(e -> handleFieldDragDetected((Rectangle) c, e));
-                c.setOnDragOver(e -> handleFieldDragOver(e));
+                c.setOnDragOver(this::handleFieldDragOver);
                 c.setOnDragEntered(e -> handleFieldDragEntered((Rectangle) c, e));
+            }
+        });
+    }
+
+
+    private void initializeEnemyCellsListeners() {
+        enemyBoard.getChildren().forEach(c -> {
+            if (c instanceof Rectangle) {
+                c.setOnMouseClicked(e -> player.tryHit(new Position((int) ((Rectangle) c).getX() - 1, (int) ((Rectangle) c).getY() - 1)));
             }
         });
     }
@@ -153,9 +206,10 @@ public class BattleshipGameController {
             length = 1;
             currShip.add(rectangle);
             dragSource = rectangle;
-            rectangle.setFill(SHIP_PAINT);
-
+            CellPainter.updateColor(CellStatus.SHIP, rectangle);
             removeFromPossibleShips();
+            setShipPositions();
+            currShip.clear();
         }
     }
 
@@ -182,10 +236,17 @@ public class BattleshipGameController {
     private void handleFieldDragDropped(DragEvent e) {
         if (canPlaceShip(length)) {
             removeFromPossibleShips();
+            setShipPositions();
+            currShip.clear();
             e.setDropCompleted(true);
         } else if(possibleShips.get(length).isEmpty()){
             reject();
         }
+    }
+
+    private void setShipPositions() {
+        Collection<Position> positions = currShip.stream().map(r -> new Position((int) r.getX() - 1, (int) r.getY() - 1)).collect(Collectors.toList());
+        player.setPositions(positions);
     }
 
     /**
@@ -200,9 +261,9 @@ public class BattleshipGameController {
             dragSource = rectangle;
             Dragboard db = rectangle.startDragAndDrop(TransferMode.ANY);
             Map<DataFormat, Object> map = new HashMap<>();
-            map.put(DataFormat.PLAIN_TEXT, String.valueOf(rectangle.getX()) + String.valueOf(rectangle.getY()));
+            map.put(DataFormat.PLAIN_TEXT, rectangle.getX() + String.valueOf(rectangle.getY()));
             length = 1;
-            rectangle.setFill(SHIP_PAINT);
+            CellPainter.updateColor(CellStatus.SHIP, rectangle);
             db.setContent(map);
             e.setDragDetect(true);
             e.consume();
@@ -212,7 +273,7 @@ public class BattleshipGameController {
     /**
      * Method accepts transfer mode to make creating ship possible.
      * It is vital for the method #{@link #handleFieldDragDropped(DragEvent)} to work properly.
-     * @param e
+     * @param e dragEvent
      */
     private void handleFieldDragOver(DragEvent e) {
         e.acceptTransferModes(TransferMode.ANY);
@@ -229,7 +290,7 @@ public class BattleshipGameController {
         if (canShipBeIncluded(rectangle, max)) {
             currShip.add(rectangle);
             length++;
-            rectangle.setFill(SHIP_PAINT);
+            CellPainter.updateColor(CellStatus.SHIP, rectangle);
         }
     }
 
@@ -257,7 +318,8 @@ public class BattleshipGameController {
      * Method rejects attempt to create ship. Likely to be refactored as further mechanics are implemented
      */
     private void reject() {
-        currShip.forEach(r -> r.setFill(BOARD_PAINT));
+        currShip.forEach(r -> CellPainter.updateColor(CellStatus.WATER, r));
+        currShip.clear();
     }
 
     /**
@@ -266,9 +328,9 @@ public class BattleshipGameController {
      */
     private List<Label> initializeBoardLetterLabels() {
         List<Label> resultList = new LinkedList<>();
-        String[] letters = new String[BOARD_WIDTH];
+        String[] letters = new String[BOARD_SIZE];
         char c = 'A';
-        for (int i = 0; i < BOARD_WIDTH; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             letters[i] = String.valueOf(c++);
         }
         Arrays.stream(letters).forEach(getStringConsumer(resultList));
@@ -282,9 +344,9 @@ public class BattleshipGameController {
      */
     private List<Label> initializeBoardNumberLabels() {
         List<Label> resultList = new LinkedList<>();
-        String[] letters = new String[BOARD_WIDTH];
+        String[] letters = new String[BOARD_SIZE];
         int c = 1;
-        for (int i = 0; i < BOARD_WIDTH; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             letters[i] = String.valueOf(c++);
         }
         Arrays.stream(letters).forEach(getStringConsumer(resultList));
@@ -328,16 +390,28 @@ public class BattleshipGameController {
     }
 
     private void fillBoards() {
-        for (int i = 1; i <= BOARD_WIDTH; i++) {
-            for (int j = 1; j <= BOARD_HEIGHT; j++) {
-                Rectangle rect1 = new Rectangle(20, 20, BOARD_PAINT);
-                Rectangle rect2 = new Rectangle(20, 20, BOARD_PAINT);
+        for (int i = 1; i <= BOARD_SIZE; i++) {
+            for (int j = 1; j <= BOARD_SIZE; j++) {
+                Rectangle rect1 = new Rectangle(20, 20);
+                Rectangle rect2 = new Rectangle(20, 20);
+
+                CellPainter.updateColor(CellStatus.WATER, rect1);
+                CellPainter.updateColor(CellStatus.WATER, rect2);
 
                 rect1.setX(i);
                 rect1.setY(j);
 
-                rect2.onMouseEnteredProperty().set(e -> rect2.setFill(ATTACK_PAINT));
-                rect2.onMouseExitedProperty().set(e -> rect2.setFill(BOARD_PAINT));
+                rect2.setX(i);
+                rect2.setY(j);
+
+                rect2.onMouseEnteredProperty().set(e -> {
+                    if (rect2.getFill().equals(CellPainter.BOARD_PAINT))
+                        CellPainter.updateColor(CellPainter.ATTACK_PAINT, rect2);
+                });
+                rect2.onMouseExitedProperty().set(e -> {
+                    if (rect2.getFill().equals(CellPainter.ATTACK_PAINT))
+                        CellPainter.updateColor(CellStatus.WATER, rect2);
+                });
 
                 playerBoard.add(rect1, i, j);
                 enemyBoard.add(rect2, i, j);
@@ -347,7 +421,7 @@ public class BattleshipGameController {
 
     /**
      * Method returns boolean value if there is possibility to place a ship of specific length on specific place
-     * Potentially method will be refactored to receive more parameters determinig the outcome
+     * Potentially method will be refactored to receive more parameters determining the outcome
      * as the further mechanics will be implemented
      * @param i length of ship
      *
@@ -355,6 +429,5 @@ public class BattleshipGameController {
     private boolean canPlaceShip(int i) {
         return !possibleShips.get(i).isEmpty();
     }
-
 
 }

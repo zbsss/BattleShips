@@ -24,7 +24,7 @@ public class Board {
     /**
      *  calls hit on an appropriate cell
      * @param position position on the board to be hit
-     * @return
+     *
      */
     public CellStatus hit(Position position){
         return getCell(position).hit();
@@ -45,6 +45,10 @@ public class Board {
      */
     public Cell getCell(Position position){
         return board[position.getX()][position.getY()];
+    }
+
+    public Cell[][] getCells() {
+        return board;
     }
 
     public CellStatus getCellStatus(Position position){

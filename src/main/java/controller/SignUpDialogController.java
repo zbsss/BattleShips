@@ -41,7 +41,7 @@ public class SignUpDialogController {
         PlayerInfoDAO playerInfoDAO = new PlayerInfoDAO();
         Optional<PlayerInfo> playerInfo = playerInfoDAO.findByNick(nickField.getText());
         if (playerInfo.isPresent()) {
-            dialogStage.setTitle("User with your nick exsist");
+            dialogStage.setTitle("User with your nick exists");
             nickField.setText("");
         } else {
             if (!nameField.getText().isBlank() && !nickField.getText().isBlank() && !passwordField.getText().isBlank()) {

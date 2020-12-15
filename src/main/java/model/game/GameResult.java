@@ -13,7 +13,7 @@ public class GameResult {
     static final String TABLENAME = "game_result";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = Columns.ID)
     private int id;
 
@@ -29,15 +29,19 @@ public class GameResult {
     @Column(name = Columns.DIFFICULTY, nullable = false)
     private Difficulty difficulty;
 
-    @Column(name = Columns.PLAYERID, nullable = false)
-    private int playerId;
+//    @Column(name = Columns.PLAYERID, nullable = false)
+//    private int playerId;
 
-    public GameResult(LocalDateTime beginTime, LocalDateTime endTime, Result result, Difficulty difficulty, int playerId) {
+    @ManyToOne
+    private PlayerInfo player;
+
+    public GameResult(LocalDateTime beginTime, LocalDateTime endTime, Result result, Difficulty difficulty, int playerId, PlayerInfo player) {
         this.beginTime = beginTime;
         this.endTime = endTime;
         this.result = result;
         this.difficulty = difficulty;
-        this.playerId = playerId;
+//        this.playerId = playerId;
+        this.player = player;
     }
 
     public GameResult() {
@@ -79,21 +83,20 @@ public class GameResult {
         this.difficulty = difficulty;
     }
 
-    public int getPlayerId() {
-        return playerId;
-    }
+//    public int getPlayerId() {
+//        return playerId;
+//    }
 
-    public void setPlayerId(int playerId) {
-        this.playerId = playerId;
-    }
+//    public void setPlayerId(int playerId) {
+//        this.playerId = playerId;
+//    }
 
-    class Columns{
+    static class Columns{
         static final String ID = "id";
         static final String BEGINTIME = "begin_time";
         static final String ENDTIME = "end_time";
         static final String RESULT = "result";
         static final String DIFFICULTY = "difficulty";
         static final String PLAYERID = "player_id";
-
     }
 }

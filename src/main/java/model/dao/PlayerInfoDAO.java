@@ -30,7 +30,7 @@ public class PlayerInfoDAO extends GenericDAO<PlayerInfo> {
 
     public Optional<PlayerInfo> findByNick(final String nick) {
         try {
-            PlayerInfo playerInfo = currentSession().createQuery("SELECT p FROM PlayerInfo p WHERE p.nick = :nick", PlayerInfo.class)
+            PlayerInfo playerInfo = currentSession().createQuery("SELECT p FROM PlayerInfo p WHERE p.nickName = :nick", PlayerInfo.class)
                     .setParameter("nick", nick).getSingleResult();
             return Optional.of(playerInfo);
         } catch (PersistenceException e) {
