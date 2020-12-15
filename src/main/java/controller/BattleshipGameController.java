@@ -1,7 +1,6 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -113,6 +112,9 @@ public class BattleshipGameController {
         gameThread.start();
     }
 
+    /**
+     * stop the game if the user closes window
+     */
     private void initializeCloseListener() {
         playerBoard.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
             if (oldScene == null && newScene != null) {
@@ -128,7 +130,9 @@ public class BattleshipGameController {
         });
     }
 
-
+    /**
+     * add Observer for changing colors of rectangles depending on cell status
+     */
     private void addCellsObservers() {
         Arrays.stream(player.getMyBoard().getCells()).forEach(a -> Arrays.stream(a).forEach(c -> c.addObserver(playerObserver)));
         Arrays.stream(game.getBot().getMyBoard().getCells()).forEach(a -> Arrays.stream(a).forEach(c -> c.addObserver(botObserver)));
@@ -173,7 +177,9 @@ public class BattleshipGameController {
         });
     }
 
-
+    /**
+     * adds listeners to all cells. On click they send message to waiting player thread that the move has been made
+     */
     private void initializeEnemyCellsListeners() {
         enemyBoard.getChildren().forEach(c -> {
             if (c instanceof Rectangle) {
@@ -244,6 +250,9 @@ public class BattleshipGameController {
         }
     }
 
+    /**
+     * sends message to waiting player thread that the place has been shipped
+     */
     private void setShipPositions() {
         Collection<Position> positions = currShip.stream().map(r -> new Position((int) r.getX() - 1, (int) r.getY() - 1)).collect(Collectors.toList());
         player.setPositions(positions);
@@ -389,6 +398,9 @@ public class BattleshipGameController {
         fillBoards();
     }
 
+    /**
+     * fills player board and enemy board with rectangles representing cells on game boards
+     */
     private void fillBoards() {
         for (int i = 1; i <= BOARD_SIZE; i++) {
             for (int j = 1; j <= BOARD_SIZE; j++) {
