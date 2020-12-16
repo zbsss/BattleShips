@@ -1,6 +1,6 @@
 package model.dao;
 
-import model.players.PlayerInfo;
+import model.data.PlayerInfo;
 
 import javax.persistence.PersistenceException;
 import java.util.List;

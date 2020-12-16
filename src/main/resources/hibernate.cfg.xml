@@ -15,7 +15,7 @@
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
 
-        <mapping class="model.players.PlayerInfo"></mapping>
-        <mapping class="model.game.GameResult"></mapping>
+        <mapping class="model.data.PlayerInfo"></mapping>
+        <mapping class="model.data.GameResult"></mapping>
     </session-factory>
 </hibernate-configuration>

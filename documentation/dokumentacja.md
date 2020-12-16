@@ -170,3 +170,82 @@ public class Ship implements CellObserver{
     }
 }
 ```
+
+---
+
+# M2
+## Wymagania i odpowiedzialość
+[✔] działająca warstwa persystencji (**Oliwia Masiarek**)<br>
+[✔] autentykacja i autoryzacja (**Oliwia Masiarek, Tomasz Rosiek**)<br>
+[✔] przebieg rozgrywki (**Tomasz Rosiek**)<br>
+[✔] obsługa poziomu trudności (**Michał Kurleto**)<br>
+[✔] dokumentacja (**Michał Kurleto**)<br>
+
+---
+## Wykorzystane wzorce projektowe
+- Factory (klasa **BotFactory**)
+- DAO (pakiet `java.model.dao`)
+- MVC (pakiety `java.model`, `resources.view`, `java.controller`)
+- Observer (klasa **CellObserver**)
+
+---
+## Warstwa persystencji
+Warstwa persystencji wykorzystuje Hibernate, wzorzec DAO oraz bazę danych SQLite.   
+
+Diagram bazy:
+![](image/baza.png)
+
+`java.model.data`   
+- **PlayerInfo** - odpowiada tabeli Player z bazy danych
+- **GameInfo** - odpowiada tabeli Game z bazy danych
+
+`java.model.dao`
+- **PlayerInfoDAO** - odpowiada zapis/odczyt informacji o graczu z bazy danych
+- **PlayerStatisticDAO** - odpowiada za pobieranie statystyk graczy z bazy
+- **GameInfoDAO** - odpowiada za pobieranie wyników gier z bazy
+
+Za połączenie z bazą danych odpowiada klasa **SessionService**.
+
+---
+## Autentykacja i autoryzacja
+W pełni zaimplementowane są widoki logowania i rejestracji oraz odpowiadające im kontrolery.
+Jednak widoki te nie są jeszcze podłączone do głównej aplikacji.
+
+### Logowanie
+Kontroler: **LoginDialogController**   
+Widok: **LoginDialog.fxml**
+
+![](image/login.png)
+
+
+### Rejestracja
+Kontroler: **SignUpDialogController**   
+Widok: **SignUpDialog.fxml**   
+
+
+---
+## Przebieg rozgrywki
+Rozgrywka jest w pełni zaimplementowana. Po uruchomieniu programu według instrukcji i ustawieniu wszystkich statków gra rozpoczyna się. Na razie gra uruchamia się defaultowo na jednym poziomie trudności (pomimo, że inne są już zaimplementowane), ponieważ nie ma jeszcze widoku tworzenia nowej gry.   
+Żeby wykonać ruch należy kliknąć na wybrane pole na planszy przeciwnika (plansza po lewej).
+
+![](image/game.png)
+### Legenda kolorów
+- ![#7fffd4](https://placehold.it/15/7fffd4/000000?text=+) `Woda`
+- ![#ffa500](https://placehold.it/15/ffa500/000000?text=+) `Statek`
+- ![#ff00ff](https://placehold.it/15/ff00ff/000000?text=+) `Trafiony`
+- ![#ff0000](https://placehold.it/15/ff0000/000000?text=+) `Trafiony zatopiony`
+- ![#008000](https://placehold.it/15/008000/000000?text=+) `Pudło`
+
+---
+## Obsługa poziomu trudności
+Gra obsługuje dwa poziomy trudności **Easy** i **Hard**. Implementacja znajduje poziomów trudności rozgrywki znajduje się odpowienio w klasach **EasyBot** i **HardBot** w pakiecie `java.model.game.bot`<br>
+Zastosowano również wzorzec factory (klasa **BotFactory**) do tworzenia odpowiedniego bota na podstawie wybranego poziomu trudności.
+
+### EasyBot:
+Wykonuje wszystkie ruchy losowo.
+
+### HardBot:
+Wykonuje ruchy losowo do momentu aż trafi statek przeciwnika, wtedy następne ruchy są wykonywane w okolicy dopóki statek nie zostanie zatopiony.
+
+
+

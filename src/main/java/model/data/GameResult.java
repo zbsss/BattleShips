@@ -1,6 +1,5 @@
-package model.game;
+package model.data;
 
-import model.players.PlayerInfo;
 import model.statuses.Difficulty;
 import model.statuses.Result;
 

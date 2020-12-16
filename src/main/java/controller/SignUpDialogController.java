@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.dao.PlayerInfoDAO;
-import model.players.PlayerInfo;
+import model.data.PlayerInfo;
 
 import java.text.ParseException;
 import java.util.Optional;

@@ -1,8 +1,7 @@
 package model.dao;
 
-import model.game.GameResult;
-import model.players.PlayerInfo;
-import model.players.PlayerStatistics;
+import model.data.PlayerInfo;
+import model.data.PlayerStatistics;
 import model.statuses.Result;
 
 import javax.persistence.PersistenceException;

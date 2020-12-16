@@ -1,4 +1,4 @@
-package model.players;
+package model.data;
 
 public class PlayerStatistics {
     private PlayerInfo player;

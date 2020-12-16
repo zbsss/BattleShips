@@ -1,7 +1,7 @@
 package model.dao;
 
-import model.game.GameResult;
-import model.players.PlayerInfo;
+import model.data.GameResult;
+import model.data.PlayerInfo;
 import model.statuses.Difficulty;
 import model.statuses.Result;
 

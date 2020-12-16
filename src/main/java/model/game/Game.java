@@ -1,7 +1,7 @@
 package model.game;
 
 import model.game.bot.BotFactory;
-import model.players.PlayerInfo;
+import model.data.PlayerInfo;
 import model.statuses.CellStatus;
 import model.statuses.Difficulty;
 import model.statuses.Result;

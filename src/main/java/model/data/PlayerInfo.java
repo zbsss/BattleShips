@@ -1,6 +1,4 @@
-package model.players;
-
-import model.game.GameResult;
+package model.data;
 
 import javax.persistence.*;
 import java.util.Collection;

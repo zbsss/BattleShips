@@ -11,14 +11,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import model.game.*;
-import model.players.PlayerInfo;
+import model.data.PlayerInfo;
 import model.statuses.CellStatus;
 import model.statuses.Difficulty;
 import view.BattleshipCellObserver;
 import view.SecretBattleshipCellObserver;
 import view.CellPainter;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
