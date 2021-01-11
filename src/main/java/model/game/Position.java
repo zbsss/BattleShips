@@ -1,5 +1,6 @@
 package model.game;
 
+
 public class Position {
     private final int x;
     private final int y;
@@ -15,5 +16,9 @@ public class Position {
 
     public int getY() {
         return y;
+    }
+
+    public Position add(Position other){
+        return new Position(this.getX() + other.getX(), this.getY() + other.getY());
     }
 }

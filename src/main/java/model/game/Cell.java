@@ -15,6 +15,10 @@ public class Cell {
         status = CellStatus.WATER;
     }
 
+    public Position getPosition() {
+        return position;
+    }
+
     /**
      * changes status of the cell to hit or miss
      */
@@ -58,7 +62,7 @@ public class Cell {
      */
     private void notifyObservers(){
         for (CellObserver observer: observers) {
-            observer.update(status);
+            observer.update(this);
         }
     }
 }

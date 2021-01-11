@@ -1,6 +1,7 @@
 package model.game;
 
-import model.players.PlayerInfo;
+import model.game.bot.BotFactory;
+import model.data.PlayerInfo;
 import model.statuses.CellStatus;
 import model.statuses.Difficulty;
 import model.statuses.Result;
@@ -8,21 +9,32 @@ import model.statuses.Result;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Game {
+public class Game implements Runnable{
     private final PlayerInfo playerInfo;
     private final HumanPlayer player;
-    private final Bot bot;
+    private final AbstractPlayer bot;
 
     private LocalDateTime beginning;
     private LocalDateTime end;
     private Result result;
     private AtomicBoolean running;
+    private Difficulty difficulty;
 
     public Game(PlayerInfo playerInfo, int boardSize, Difficulty difficulty){
         this.playerInfo = playerInfo;
         player = new HumanPlayer(boardSize);
-        bot = new Bot(boardSize, difficulty);
+        bot = BotFactory.createBot(difficulty, boardSize);
+        this.difficulty = difficulty;
     }
+
+    public HumanPlayer getPlayer() {
+        return player;
+    }
+
+    public AbstractPlayer getBot() {
+        return bot;
+    }
+
 
     /**
      * plays a single turn of the active player
@@ -43,23 +55,18 @@ public class Game {
         playTurn(bot, player);
     }
 
+
     /**
-     * starts the game
+     * main loop of the game, after the game if finished sets results
      */
-    public void start(){
+    @Override
+    public void run(){
         beginning = LocalDateTime.now();
         running = new AtomicBoolean(true);
 
         player.place();
         bot.place();
 
-        run();
-    }
-
-    /**
-     * main loop of the game, after the game if finished sets results
-     */
-    private void run(){
         while (running.get() &&
                 player.hasNotLost() &&
                 bot.hasNotLost()) {
@@ -75,10 +82,10 @@ public class Game {
     private void setResult(){
         end = LocalDateTime.now();
 
-        if(player.hasNotLost() && bot.hasNotLost())
-            result = Result.CANCELED;
-        else
+        if (result != Result.CANCELED)
             result = player.hasNotLost() ? Result.WON : Result.LOST;
+
+        System.out.println("THE GAME IS ENDED!");
     }
 
     /**
@@ -86,6 +93,7 @@ public class Game {
      */
     public void cancel(){
         running.set(false);
+        result = Result.CANCELED;
     }
 
     /**

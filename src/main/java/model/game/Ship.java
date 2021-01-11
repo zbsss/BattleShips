@@ -12,6 +12,11 @@ public class Ship implements CellObserver{
 
     public Ship(int length){
         this.length = length;
+        this.status = ShipStatus.CREATED;
+    }
+
+    public ShipStatus getStatus() {
+        return status;
     }
 
     /**
@@ -27,6 +32,7 @@ public class Ship implements CellObserver{
             cell.setStatus(CellStatus.SHIP);
             cell.addObserver(this);
         }
+        this.status = ShipStatus.SAILING;
     }
 
     /**
@@ -39,8 +45,10 @@ public class Ship implements CellObserver{
                 return;
 
         status = ShipStatus.DESTROYED;
-        for (Cell cell : cells)
+        for (Cell cell : cells) {
             cell.setStatus(CellStatus.DESTROYED);
+
+        }
     }
 
     public boolean isDestroyed(){
@@ -49,11 +57,11 @@ public class Ship implements CellObserver{
 
     /**
      * if the cell was hit, check if the ship has sunk
-     * @param newStatus the updated cell status
+     * @param newCell the updated cell
      */
     @Override
-    public void update(CellStatus newStatus) {
-        if(newStatus == CellStatus.HIT)
+    public void update(Cell newCell) {
+        if(newCell.getStatus() == CellStatus.HIT)
             checkIfSunk();
     }
 
