@@ -49,7 +49,11 @@
     <bottom>
         <HBox alignment="BOTTOM_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
             <children>
-                <Button mnemonicParsing="false" onAction="#handleLogInAction" prefWidth="60.0" text="Log in">
+                <Button mnemonicParsing="false" onAction="#handleSignUpAction" prefWidth="60.0" text="Sign up">
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </HBox.margin></Button>
+                <Button fx:id="logInButton" mnemonicParsing="false" onAction="#handleLogInAction" prefWidth="60.0" text="Log in">
                     <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </HBox.margin></Button>

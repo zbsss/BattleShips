@@ -1,15 +1,22 @@
 package controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import model.game.*;
 import model.data.PlayerInfo;
 import model.statuses.CellStatus;
@@ -26,7 +33,6 @@ import java.util.stream.Collectors;
 public class BattleshipGameController {
 
     private final static int BOARD_SIZE = 10;
-
     @FXML
     BorderPane borderPane;
 
@@ -75,7 +81,7 @@ public class BattleshipGameController {
     /**
      * MOCK DATA - TO CHANGE DEPENDING ON GREETING PANEL
      */
-    Game game = new Game(new PlayerInfo("Andrzej", "Duda", "andrzej@mail.pl", "cienMgly", "Burkina Faso", "admin1"), BOARD_SIZE, Difficulty.HARD);
+    Game game = new Game(new PlayerInfo("Player", "surname", "andrzej@mail.pl", "cienMgly", "Burkina Faso", "admin1"), BOARD_SIZE, Difficulty.HARD);
     HumanPlayer player = game.getPlayer();
 
     /**
@@ -151,10 +157,10 @@ public class BattleshipGameController {
      * In the future possibly method will be replaced with getter from #{@link Game} object
      */
     private void initializePossibleShips() {
-        possibleShips.put(4, Collections.singletonList(fourByOne));
-        possibleShips.put(3, Arrays.asList(threeByOneA, threeByOneB));
-        possibleShips.put(2, Arrays.asList(twoByOneA, twoByOneB, twoByOneC));
-        possibleShips.put(1, Arrays.asList(oneByOneA, oneByOneB, oneByOneC, oneByOneD));
+        possibleShips.put(4, new ArrayList<>(Collections.singletonList(fourByOne)));
+        possibleShips.put(3, new ArrayList<>(Arrays.asList(threeByOneA, threeByOneB)));
+        possibleShips.put(2, new ArrayList<>(Arrays.asList(twoByOneA, twoByOneB, twoByOneC)));
+        possibleShips.put(1, new ArrayList<>(Arrays.asList(oneByOneA, oneByOneB, oneByOneC, oneByOneD)));
     }
 
     /**
@@ -441,4 +447,22 @@ public class BattleshipGameController {
         return !possibleShips.get(i).isEmpty();
     }
 
+    public void placeShipsRandomly(ActionEvent actionEvent) {
+        player.placeRandomly();
+        clearPossibleShips();
+    }
+
+    private void clearPossibleShips() {
+        for (int i: possibleShips.keySet()) {
+            possibleShips.get(i).forEach(b -> b.setVisible(false));
+            possibleShips.get(i).clear();
+        }
+    }
+
+    public void exit(ActionEvent actionEvent) {
+        Stage stage = (Stage) this.borderPane.getScene().getWindow();
+        game.cancel();
+        player.cancel();
+        stage.close();
+    }
 }

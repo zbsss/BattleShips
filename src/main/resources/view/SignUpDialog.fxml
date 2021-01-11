@@ -6,19 +6,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+
 <?import javafx.geometry.Insets?>
 <BorderPane prefWidth="300.0"
             xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.SignUpDialogController">
+            fx:controller="controller.SignUpDialogController" minHeight="1.0" minWidth="1.0">
     <center>
         <GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
             <columnConstraints>
@@ -98,16 +97,18 @@
         </GridPane>
     </center>
     <bottom>
-        <HBox alignment="BOTTOM_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
+        <HBox alignment="BOTTOM_RIGHT" spacing="5.0" BorderPane.alignment="BOTTOM_RIGHT">
             <children>
-                <Button mnemonicParsing="false" onAction="#handleSignUpAction" prefWidth="60.0" text="Save">
+                <Button fx:id="LogInButton" mnemonicParsing="false" onAction="#handleLogInAction" prefWidth="60.0" text="Log in">
+                    <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </HBox.margin></Button>
+                <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#handleSignUpAction" prefWidth="60.0" text="Sign up">
                     <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </HBox.margin></Button>
             </children>
-            <BorderPane.margin>
-                <Insets bottom="0.0" left="5.0" right="5.0" top="5.0" />
-            </BorderPane.margin>
+
         </HBox>
     </bottom>
     <opaqueInsets>

@@ -2,8 +2,6 @@ package model.game;
 
 import model.statuses.ShipStatus;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -40,7 +38,8 @@ public class HumanPlayer extends AbstractPlayer {
     private void placeSingleShip() {
         try {
             Collection<Position> shipPositions = getPositionsFromView();
-            getShips().stream().filter(s -> s.getLength() == shipPositions.size() && s.getStatus() == ShipStatus.CREATED).findAny().ifPresent(s -> placeShip(shipPositions, s));
+            if (shipPositions != null)
+                getShips().stream().filter(s -> s.getLength() == shipPositions.size() && s.getStatus() == ShipStatus.CREATED).findAny().ifPresent(s -> placeShip(shipPositions, s));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -49,7 +48,7 @@ public class HumanPlayer extends AbstractPlayer {
 
     private Collection<Position> getPositionsFromView() throws InterruptedException {
         lock.lock();
-        while (placePositions == null)
+        if (placePositions == null)
             shipPlaced.await();
 
         Collection<Position> result = placePositions;
@@ -77,7 +76,7 @@ public class HumanPlayer extends AbstractPlayer {
     public Position makeTurn() {
         try {
             lock.lock();
-            while(hitPosition == null)
+            if(hitPosition == null)
                 hit.await();
             Position res = hitPosition;
             System.out.println("HIT " + hitPosition.getX() + " , " + hitPosition.getY());
@@ -117,5 +116,16 @@ public class HumanPlayer extends AbstractPlayer {
         } finally {
             lock.unlock();
         }
+    }
+
+    public void placeRandomly() {
+        try {
+            lock.lock();
+            super.place();
+            shipPlaced.signal();
+        } finally {
+            lock.unlock();
+        }
+
     }
 }

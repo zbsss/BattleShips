@@ -5,17 +5,19 @@ import model.data.PlayerStatistics;
 import model.statuses.Result;
 
 import javax.persistence.PersistenceException;
+import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PlayerStatisticDAO extends GenericDAO{
 
     public Optional<PlayerStatistics> getStatisticsForPlayer(PlayerInfo player){
         try {
-            long wins = currentSession().createQuery("SELECT count(g.id) from GameResult g WHERE g.playerId = :player_id AND g.result = :result", Long.class)
+            long wins = currentSession().createQuery("SELECT count(g.id) from GameResult g WHERE g.player.id = :player_id AND g.result = :result", Long.class)
                     .setParameter("player_id", player.getId())
                     .setParameter("result", Result.WON).getSingleResult();
 
-            long loses = currentSession().createQuery("SELECT count(g.id) from GameResult g WHERE g.playerId = :player_id AND g.result = :result", Long.class)
+            long loses = currentSession().createQuery("SELECT count(g.id) from GameResult g WHERE g.player.id = :player_id AND g.result = :result", Long.class)
                     .setParameter("player_id", player.getId())
                     .setParameter("result", Result.LOST).getSingleResult();
 
@@ -53,5 +55,15 @@ public class PlayerStatisticDAO extends GenericDAO{
             e.printStackTrace();
         }
         return Optional.empty();
+    }
+
+    public int getPlayerPlace(PlayerInfo player){
+        List<PlayerStatistics> playerStatisticsList = currentSession().createQuery("SELECT (select count(g) from p.games g where g.result = :win) as wins," +
+          "(select count(g) from p.games g where g.result = :lose) as loses, p as player FROM PlayerInfo p ORDER BY 2 DESC, 1 ASC" , PlayerStatistics.class)
+                  .setParameter("win", Result.WON)
+                  .setParameter("lose", Result.LOST).getResultList();
+
+//            Collections.sort(playerStatisticsList, new SortByWins());
+        return playerStatisticsList.stream().map(PlayerStatistics::getPlayer).collect(Collectors.toList()).indexOf(player);
     }
 }

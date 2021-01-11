@@ -18,7 +18,7 @@ public class BattleshipApp extends Application {
             controller.setDialogStage(primaryStage);
             controller.initRootLayout();
             var loader = new FXMLLoader();
-            loader.setLocation(BattleshipApp.class.getResource("view/battleships.fxml"));
+            loader.setLocation(BattleshipApp.class.getResource("view/LogInDialog.fxml"));
             BorderPane rootLayout = loader.load();
 
             primaryStage.setMaxHeight(750);
