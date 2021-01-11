@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.dao.PlayerInfoDAO;
 import model.data.PlayerInfo;
+import service.EmailService;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -71,6 +72,10 @@ public class SignUpDialogController {
             if (!nameField.getText().isBlank() && !nickField.getText().isBlank() && !passwordField.getText().isBlank()) {
                 playerInfoDAO.create(nameField.getText(), surnameField.getText(), nickField.getText(),
                         emailField.getText(), countryField.getText(), passwordField.getText());
+
+                // send email notification
+                (new EmailService()).registerNotification((new PlayerInfoDAO()).findByNick(nickField.getText()).get());
+
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                 confirm.setContentText("Account created");
                 confirm.showAndWait();
