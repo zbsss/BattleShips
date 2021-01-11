@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class GameResultDAO extends GenericDAO<GameResult>{
-    public Optional<GameResult> create(LocalDateTime beginTime, LocalDateTime endTime, Result result, Difficulty difficulty, int playerId, PlayerInfo player) {
+    public Optional<GameResult> create(LocalDateTime beginTime, LocalDateTime endTime, Result result, Difficulty difficulty, PlayerInfo player) {
         try{
-            save(new GameResult(beginTime, endTime, result, difficulty, playerId, player));
-            Optional<PlayerInfo> playerInfo = findPlayerById(playerId);
+            save(new GameResult(beginTime, endTime, result, difficulty, player.getId(), player));
+            Optional<PlayerInfo> playerInfo = findPlayerById(player.getId());
             Optional<GameResult> gameResult = findGameResult(beginTime, player);
             playerInfo.get().addGame(gameResult.get());
             return findGameResult(beginTime, player);

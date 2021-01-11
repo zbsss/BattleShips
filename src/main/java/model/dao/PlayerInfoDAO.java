@@ -34,7 +34,7 @@ public class PlayerInfoDAO extends GenericDAO<PlayerInfo> {
                     .setParameter("nick", nick).getSingleResult();
             return Optional.of(playerInfo);
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            System.out.println("USER not found");
         }
         return Optional.empty();
     }

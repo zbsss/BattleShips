@@ -135,4 +135,9 @@ public class PlayerInfo {
         static final String NICK = "nick";
     }
 
+    @Override
+    public String toString(){
+        return this.getNickName();
+    }
+
 }

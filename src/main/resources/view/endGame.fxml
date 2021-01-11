@@ -9,21 +9,29 @@
 <?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.DefaultController"
+            fx:controller="controller.EndGameController"
             prefHeight="400.0" prefWidth="600.0">
     <center>
         <VBox alignment="CENTER" maxWidth="300.0">
-            <Label text="Players ranking" alignment="CENTER" style="-fx-font-size: 36"/>
+            <Label fx:id="endMessage" text="Game is over" alignment="CENTER" style="-fx-font-size: 36"/>
             <VBox.margin>
                 <Insets top="10.0"/>
             </VBox.margin>
-            <TableView fx:id="playersList"/>
 
-            <HBox alignment="CENTER" style="-fx-padding: 10">
+            <HBox alignment="CENTER">
+                <HBox.margin>
+                    <Insets bottom="10.0"/>
+                </HBox.margin>
                 <Button text="Log out" onAction="#handleLogOut"/>
+                <HBox.margin>
+                    <Insets right="5.0"/>
+                </HBox.margin>
+                <Button text="Ranking" onAction="#handleRanking"/>
+                <HBox.margin>
+                    <Insets right="5.0"/>
+                </HBox.margin>
                 <Button text="Play a game" onAction="#handlePlay"/>
             </HBox>
-
         </VBox>
     </center>
 

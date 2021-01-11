@@ -1,5 +1,8 @@
 package model.game;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import model.dao.GameResultDAO;
 import model.game.bot.BotFactory;
 import model.data.PlayerInfo;
 import model.statuses.CellStatus;
@@ -18,7 +21,8 @@ public class Game implements Runnable{
     private LocalDateTime end;
     private Result result;
     private AtomicBoolean running;
-    private Difficulty difficulty;
+    private BooleanProperty runningProperty = new SimpleBooleanProperty(false);
+    private final Difficulty difficulty;
 
     public Game(PlayerInfo playerInfo, int boardSize, Difficulty difficulty){
         this.playerInfo = playerInfo;
@@ -36,12 +40,16 @@ public class Game implements Runnable{
     }
 
 
+    public BooleanProperty runningPropertyProperty() {
+        return runningProperty;
+    }
+
     /**
      * plays a single turn of the active player
      * @param active player that makes a move
      * @param passive other player
      */
-    private void playTurn(AbstractPlayer active, AbstractPlayer passive){
+    private void playTurn(AbstractPlayer active, AbstractPlayer passive) throws InterruptedException {
         Position position = active.makeTurn();
         CellStatus status = passive.enemyTurn(position);
         active.updateEnemyBoard(position, status);
@@ -51,8 +59,17 @@ public class Game implements Runnable{
      * plays a single round of the game
      */
     private void playRound(){
-        playTurn(player, bot);
-        playTurn(bot, player);
+        try {
+            playTurn(player, bot);
+            playTurn(bot, player);
+        } catch (InterruptedException ex) {
+            if (!running.get()) {
+                System.out.println("The game has been canceled");
+            } else {
+                ex.printStackTrace();
+            }
+        }
+
     }
 
 
@@ -63,6 +80,7 @@ public class Game implements Runnable{
     public void run(){
         beginning = LocalDateTime.now();
         running = new AtomicBoolean(true);
+        runningProperty.set(true);
 
         player.place();
         bot.place();
@@ -81,9 +99,14 @@ public class Game implements Runnable{
      */
     private void setResult(){
         end = LocalDateTime.now();
+        running.set(false);
+        runningProperty.set(false);
 
-        if (result != Result.CANCELED)
+        if (result != Result.CANCELED) {
             result = player.hasNotLost() ? Result.WON : Result.LOST;
+            GameResultDAO gameResultDAO = new GameResultDAO();
+            gameResultDAO.create(beginning, end, result, difficulty, playerInfo);
+        }
 
         System.out.println("THE GAME IS ENDED!");
     }
@@ -93,6 +116,7 @@ public class Game implements Runnable{
      */
     public void cancel(){
         running.set(false);
+        runningProperty.set(false);
         result = Result.CANCELED;
     }
 

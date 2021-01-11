@@ -132,7 +132,7 @@ public abstract class AbstractPlayer {
      * plays a turn
      * @return position on board selected by player
      */
-    public abstract Position makeTurn();
+    public abstract Position makeTurn() throws InterruptedException;
 
     /**
      * @param position position that the enemy player selected in his move

@@ -11,23 +11,23 @@ import java.util.stream.Collectors;
 
 public class PlayerStatisticDAO extends GenericDAO{
 
-    public Optional<PlayerStatistics> getStatisticsForPlayer(PlayerInfo player){
-        try {
-            long wins = currentSession().createQuery("SELECT count(g.id) from GameResult g WHERE g.player.id = :player_id AND g.result = :result", Long.class)
-                    .setParameter("player_id", player.getId())
-                    .setParameter("result", Result.WON).getSingleResult();
-
-            long loses = currentSession().createQuery("SELECT count(g.id) from GameResult g WHERE g.player.id = :player_id AND g.result = :result", Long.class)
-                    .setParameter("player_id", player.getId())
-                    .setParameter("result", Result.LOST).getSingleResult();
-
-            PlayerStatistics playerStatistics = new PlayerStatistics(player, wins, loses);
-            return Optional.of(playerStatistics);
-        } catch (PersistenceException e){
-            e.printStackTrace();
-        }
-        return Optional.empty();
-    }
+//    public Optional<PlayerStatistics> getStatisticsForPlayer(PlayerInfo player){
+//        try {
+//            long wins = currentSession().createQuery("SELECT count(g.id) from GameResult g WHERE g.player.id = :player_id AND g.result = :result", Long.class)
+//                    .setParameter("player_id", player.getId())
+//                    .setParameter("result", Result.WON).getSingleResult();
+//
+//            long loses = currentSession().createQuery("SELECT count(g.id) from GameResult g WHERE g.player.id = :player_id AND g.result = :result", Long.class)
+//                    .setParameter("player_id", player.getId())
+//                    .setParameter("result", Result.LOST).getSingleResult();
+//
+//            PlayerStatistics playerStatistics = new PlayerStatistics(player, wins, loses);
+//            return Optional.of(playerStatistics);
+//        } catch (PersistenceException e){
+//            e.printStackTrace();
+//        }
+//        return Optional.empty();
+//    }
 
     class SortByWins implements Comparator<PlayerStatistics>{
         public int compare(PlayerStatistics a, PlayerStatistics b){
@@ -35,14 +35,17 @@ public class PlayerStatisticDAO extends GenericDAO{
         }
     }
 
-    public Optional<List<PlayerStatistics>> getStatisticsAllPlayers(PlayerInfo player){
+    public Optional<List<PlayerStatistics>> getStatisticsAllPlayers(){
         try {
-             List<PlayerStatistics> playerStatisticsList = currentSession().createQuery("SELECT (select count(g) from p.games g where g.result = :win) as wins," +
-            "(select count(g) from p.games g where g.result = :lose) as loses, p as player FROM PlayerInfo p" , PlayerStatistics.class)
+             List<Object[]> playerStatisticsParams = currentSession().createQuery("SELECT (select count(g) from p.games g where g.result = :win) as wins," +
+            "(select count(g) from p.games g where g.result = :lose) as loses, p as player FROM PlayerInfo p")
                     .setParameter("win", Result.WON)
                     .setParameter("lose", Result.LOST).getResultList();
+             List<PlayerStatistics> playerStatisticsList = playerStatisticsParams.stream()
+                     .map(t -> new PlayerStatistics((PlayerInfo) t[2], ((Long) t[0]).intValue(), ((Long) t[1]).intValue()))
+                     .sorted(new SortByWins())
+                     .collect(Collectors.toList());
 
-            Collections.sort(playerStatisticsList, new SortByWins());
             int size = playerStatisticsList.size();
             if (size < 10)
                 return Optional.of(playerStatisticsList);
@@ -58,12 +61,15 @@ public class PlayerStatisticDAO extends GenericDAO{
     }
 
     public int getPlayerPlace(PlayerInfo player){
-        List<PlayerStatistics> playerStatisticsList = currentSession().createQuery("SELECT (select count(g) from p.games g where g.result = :win) as wins," +
-          "(select count(g) from p.games g where g.result = :lose) as loses, p as player FROM PlayerInfo p ORDER BY 2 DESC, 1 ASC" , PlayerStatistics.class)
-                  .setParameter("win", Result.WON)
-                  .setParameter("lose", Result.LOST).getResultList();
+        List<Object[]> playerStatisticsParams = currentSession().createQuery("SELECT (select count(g) from p.games g where g.result = :win) as wins," +
+                "(select count(g) from p.games g where g.result = :lose) as loses, p as player FROM PlayerInfo p")
+                .setParameter("win", Result.WON)
+                .setParameter("lose", Result.LOST).getResultList();
+        List<PlayerStatistics> playerStatisticsList = playerStatisticsParams.stream()
+                .map(t -> new PlayerStatistics((PlayerInfo) t[2], ((Long) t[0]).intValue(), ((Long) t[1]).intValue()))
+                .sorted(new SortByWins())
+                .collect(Collectors.toList());
 
-//            Collections.sort(playerStatisticsList, new SortByWins());
         return playerStatisticsList.stream().map(PlayerStatistics::getPlayer).collect(Collectors.toList()).indexOf(player);
     }
 }

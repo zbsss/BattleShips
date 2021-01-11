@@ -31,8 +31,6 @@ public class HumanPlayer extends AbstractPlayer {
         while (!allShipsPlaced() && running.get()) {
             placeSingleShip();
         }
-
-        // For each ship, get positions from GUI and call placeShip()
     }
 
     private void placeSingleShip() {
@@ -73,21 +71,23 @@ public class HumanPlayer extends AbstractPlayer {
     }
 
     @Override
-    public Position makeTurn() {
+    public Position makeTurn() throws InterruptedException{
         try {
             lock.lock();
-            if(hitPosition == null)
+            if(running.get() && hitPosition == null)
                 hit.await();
-            Position res = hitPosition;
-            System.out.println("HIT " + hitPosition.getX() + " , " + hitPosition.getY());
-            hitPosition = null;
-            return res;
-        } catch (InterruptedException ex) {
-            System.out.println("THE GAME HAS BEEN CANCELED");
+            while(running.get() && !getEnemyBoard().cellCanBeHit(hitPosition))
+                hit.await();
+            if (running.get()) {
+                Position res = hitPosition;
+                hitPosition = null;
+                return res;
+            } else {
+                throw new InterruptedException("The game has been cancelled");
+            }
         } finally {
             lock.unlock();
         }
-        return null;
     }
 
 
@@ -104,13 +104,13 @@ public class HumanPlayer extends AbstractPlayer {
     public void cancel() {
         try {
             lock.lock();
+            running.set(false);
             if (allShipsPlaced()) {
                 this.hitPosition = new Position(0, 0);
                 hit.signal();
             }
             else {
                 this.placePositions = Collections.singletonList(new Position(0, 0));
-                running.set(false);
                 shipPlaced.signal();
             }
         } finally {
@@ -126,6 +126,5 @@ public class HumanPlayer extends AbstractPlayer {
         } finally {
             lock.unlock();
         }
-
     }
 }

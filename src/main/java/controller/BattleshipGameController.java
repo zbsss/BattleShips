@@ -1,9 +1,15 @@
 package controller;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -25,6 +31,7 @@ import view.BattleshipCellObserver;
 import view.SecretBattleshipCellObserver;
 import view.CellPainter;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -33,6 +40,13 @@ import java.util.stream.Collectors;
 public class BattleshipGameController {
 
     private final static int BOARD_SIZE = 10;
+
+    @FXML
+    Button randomButton;
+
+    @FXML
+    Label playerNick;
+
     @FXML
     BorderPane borderPane;
 
@@ -79,24 +93,29 @@ public class BattleshipGameController {
     Rectangle dragSource;
 
     /**
-     * MOCK DATA - TO CHANGE DEPENDING ON GREETING PANEL
+     * Game Data
      */
-    Game game = new Game(new PlayerInfo("Player", "surname", "andrzej@mail.pl", "cienMgly", "Burkina Faso", "admin1"), BOARD_SIZE, Difficulty.HARD);
-    HumanPlayer player = game.getPlayer();
+    Game game;
+    HumanPlayer player;
+    PlayerInfo playerInfo;
 
     /**
      * Attributes necessary for control of drag-operation conducted to place ships on the player board
      */
     private final List<Rectangle> currShip = new LinkedList<>();
-    private final Map<Integer, List<HBox>> possibleShips = new HashMap<>();
+    private final ObservableMap<Integer, List<HBox>> possibleShips = FXCollections.observableHashMap();
 
     private BattleshipCellObserver playerObserver;
     private BattleshipCellObserver botObserver;
 
-    
 
-    @FXML
-    public void initialize() {
+    public void setPlayer(PlayerInfo player, Difficulty difficulty) {
+        this.playerInfo = player;
+        this.game = new Game(player, BOARD_SIZE, difficulty);
+        this.player = game.getPlayer();
+
+        this.playerNick.setText(player.getNickName());
+
         playerObserver = new BattleshipCellObserver(playerBoard);
         botObserver = new SecretBattleshipCellObserver(enemyBoard);
 
@@ -110,11 +129,39 @@ public class BattleshipGameController {
 
         addCellsObservers();
 
-        initializeCloseListener();
-
-
         Thread gameThread = new Thread(game);
         gameThread.start();
+
+        game.runningPropertyProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue && !newValue) {
+                    Platform.runLater(() -> {
+                        try {
+                            endGame();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+        });
+    }
+
+    private void endGame() throws IOException {
+        Stage stage = (Stage) this.borderPane.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/endGame.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+
+        EndGameController controller = loader.getController();
+        controller.setResult(game.getResult(), playerInfo);
+
+        stage.show();
+    }
+
+
+    @FXML
+    public void initialize() {
+        initializeCloseListener();
     }
 
     /**
@@ -161,6 +208,7 @@ public class BattleshipGameController {
         possibleShips.put(3, new ArrayList<>(Arrays.asList(threeByOneA, threeByOneB)));
         possibleShips.put(2, new ArrayList<>(Arrays.asList(twoByOneA, twoByOneB, twoByOneC)));
         possibleShips.put(1, new ArrayList<>(Arrays.asList(oneByOneA, oneByOneB, oneByOneC, oneByOneD)));
+
     }
 
     /**
@@ -236,6 +284,8 @@ public class BattleshipGameController {
         }
         List<HBox> newShips = ships.stream().filter(s -> s != ship).collect(Collectors.toList());
         possibleShips.put(length, newShips);
+        if (possibleShips.values().stream().allMatch(List::isEmpty))
+            randomButton.setDisable(true);
     }
 
     /**
@@ -450,6 +500,7 @@ public class BattleshipGameController {
     public void placeShipsRandomly(ActionEvent actionEvent) {
         player.placeRandomly();
         clearPossibleShips();
+        randomButton.setDisable(true);
     }
 
     private void clearPossibleShips() {
@@ -457,6 +508,7 @@ public class BattleshipGameController {
             possibleShips.get(i).forEach(b -> b.setVisible(false));
             possibleShips.get(i).clear();
         }
+
     }
 
     public void exit(ActionEvent actionEvent) {
@@ -464,5 +516,12 @@ public class BattleshipGameController {
         game.cancel();
         player.cancel();
         stage.close();
+
+    }
+
+
+    public void cancelGame(ActionEvent actionEvent) {
+        game.cancel();
+        player.cancel();
     }
 }
