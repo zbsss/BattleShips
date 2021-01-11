@@ -1,5 +1,6 @@
 package service;
 
+import model.dao.PlayerStatisticDAO;
 import model.data.PlayerInfo;
 
 import java.util.*;
@@ -10,6 +11,7 @@ import javax.mail.Transport;
 
 
 public class EmailService {
+    private final PlayerStatisticDAO ranking = new PlayerStatisticDAO();
     private final String sender = "bob.battleship@gmail.com";
     private final String host = "smtp.gmail.com";
     private final String nothing = "g425g356hwdhsfduy456u534dsgh654ujhfgd";
@@ -19,9 +21,9 @@ public class EmailService {
 
         String contents =
                 "Hey " + toNotify.getName() +
-                ", someone passed you in the ranking!\n" +
-                "You are now ranked " + "69" + // TODO: add your current place in the ranking!!!!
-                "\n\nGood luck,\nBob";
+                ", someone passed you in the ranking!<br>" +
+                "You are now ranked " + ranking.getPlayerPlace(toNotify) +
+                "<br><br>Good luck,<br>Bob";
 
         sendEmail(toNotify.getEmail(), subject, contents);
     }
@@ -30,8 +32,8 @@ public class EmailService {
         String subject = "Battleships Registration";
         String contents =
                 "Hey " + player.getName() +
-                ", thank you for signing up for our game!\n\n" +
-                "Good luck on the sea,\nBob";
+                ", thank you for signing up for our game!<br><br>" +
+                "Good luck on the sea,<br>Bob";
         sendEmail(player.getEmail(), subject, contents);
     }
 
