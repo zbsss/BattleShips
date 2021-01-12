@@ -3,14 +3,19 @@ package model.game;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import model.dao.GameResultDAO;
+import model.dao.PlayerStatisticDAO;
+import model.data.PlayerStatistics;
 import model.game.bot.BotFactory;
 import model.data.PlayerInfo;
 import model.statuses.CellStatus;
 import model.statuses.Difficulty;
 import model.statuses.Result;
+import service.EmailService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class Game implements Runnable{
     private final PlayerInfo playerInfo;
@@ -95,7 +100,7 @@ public class Game implements Runnable{
     }
 
     /**
-     * saves the result of the game
+     * saves the result of the game, sends ranking email notifications
      */
     private void setResult(){
         end = LocalDateTime.now();
@@ -103,9 +108,24 @@ public class Game implements Runnable{
         runningProperty.set(false);
 
         if (result != Result.CANCELED) {
+            PlayerStatisticDAO ranking = new PlayerStatisticDAO();
+            int prev = ranking.getPlayerPlace(playerInfo);
+
             result = player.hasNotLost() ? Result.WON : Result.LOST;
             GameResultDAO gameResultDAO = new GameResultDAO();
             gameResultDAO.create(beginning, end, result, difficulty, playerInfo);
+
+            int curr = ranking.getPlayerPlace(playerInfo);
+            if(curr < prev) {
+                List<PlayerInfo> players = ranking
+                        .getStatisticsAllPlayers().get()
+                        .stream().map(PlayerStatistics::getPlayer)
+                        .collect(Collectors.toList());
+                EmailService email = new EmailService();
+                for (int i = curr + 1; i <= prev; i++) {
+                    email.rankingNotification(players.get(i));
+                }
+            }
         }
 
         System.out.println("THE GAME IS ENDED!");

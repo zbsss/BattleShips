@@ -39,6 +39,7 @@ public class EmailService {
 
 
     public void sendEmail(String recipient, String subject, String contents){
+        System.out.println("SENDING EMAIL NOTIFICATION");
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -67,7 +68,9 @@ public class EmailService {
             message.setContent(multipart);
 
             Transport.send(message);
+            System.out.println("EMAIL NOTIFICATION SENT TO: " + recipient);
         } catch (MessagingException e) {
+            System.out.println("EMAIL NOTIFICATION FAILED");
             e.printStackTrace();
         }
     }
