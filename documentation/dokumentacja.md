@@ -262,14 +262,15 @@ Wykonuje ruchy losowo do momentu aż trafi statek przeciwnika, wtedy następne r
 
 ---
 ## Poprawa wizualna
-Wszytkie widoki, które nie były gotowe (podpięte do głównej aplikacji) na czas oddania m2 są teraz w pełni funkcjonalne. Po zalogowaniu się wyświetla się widok lobby z aktualnym rankingiem oraz możliwością rozpoczęcia nowej gry.<br>
-Przed rozpoczęciem nowej gry należy wybrać poziom trudności.
+Wszytkie widoki, które nie były gotowe (podpięte do głównej aplikacji) na czas oddania m2 są teraz w pełni funkcjonalne.<br>
+Po zalogowaniu się wyświetla się widok lobby z aktualnym rankingiem oraz możliwością rozpoczęcia nowej gry.<br>
+Przed rozpoczęciem nowej gry należy wybrać poziom trudności.<br>
 ![](image\difficulty.jpg)
 
-Do panelu rozgrywnki dodano przycisk pozwalający na losowe ustawienie statkó na planszy oraz legende kolorów.
+<br>Do panelu rozgrywnki dodano przycisk pozwalający na losowe ustawienie statkó na planszy oraz legende kolorów.<br>
 ![](image\game.jpg)
 
-Po zakończeniu gry pojawia się komunikat o jej wyniku.
+<br>Po zakończeniu gry pojawia się komunikat o jej wyniku.<br>
 ![](image\win.jpg)
 
 ---
@@ -287,7 +288,7 @@ Gracz otrzymuje powiadomienie mailowe jeśli:
 
 Przykładowe maile wysłane z aplikacji:
 
-![](image\signupnotification.jpg)
+![](image\signupnotification.jpg)<br>
 ![](image\rankingnotification.jpg)
 ---
 ## Tooltipy
