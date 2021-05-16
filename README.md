@@ -265,20 +265,20 @@ Wykonuje ruchy losowo do momentu aż trafi statek przeciwnika, wtedy następne r
 Wszytkie widoki, które nie były gotowe (podpięte do głównej aplikacji) na czas oddania m2 są teraz w pełni funkcjonalne.<br>
 Po zalogowaniu się wyświetla się widok lobby z aktualnym rankingiem oraz możliwością rozpoczęcia nowej gry.<br>
 Przed rozpoczęciem nowej gry należy wybrać poziom trudności.<br>
-![](image\difficulty.jpg)
+![](image/difficulty.jpg)
 
 <br>Do panelu rozgrywnki dodano przycisk pozwalający na losowe ustawienie statkó na planszy oraz legende kolorów.<br>
-![](image\game.jpg)
+![](image/game.jpg)
 
 <br>Po zakończeniu gry pojawia się komunikat o jej wyniku.<br>
-![](image\win.jpg)
+![](image/win.jpg)
 
 ---
 ## Ranking
 Ranking wyświetlany jest w lobby. O pozycji w rankingu decyduje liczba wygranych oraz przegranych.<br> 
 Gracze są powiadamiani mailowo jeśli spadną w rankingu.
 
-![](image\ranking.jpg)
+![](image/ranking.jpg)
 ---
 ## Notyfikacje mailami
 Notyfikacje mailowe są zaimplementowane w klasie **EmailService**.  
@@ -288,11 +288,11 @@ Gracz otrzymuje powiadomienie mailowe jeśli:
 
 Przykładowe maile wysłane z aplikacji:
 
-![](image\signupnotification.jpg)<br>
-![](image\rankingnotification.jpg)
+![](image/signupnotification.jpg)<br>
+![](image/rankingnotification.jpg)
 ---
 ## Tooltipy
 Do głównego panelu gry została dodana legenda kolorów.<br><br>
-![](image\legend.jpg)
+![](image/legend.jpg)
 <br><br>Dodane zostały alerty potwierdzające rejestrację oraz koniec gry.<br><br>
-![](image\confirmation.jpg)
+![](image/confirmation.jpg)
